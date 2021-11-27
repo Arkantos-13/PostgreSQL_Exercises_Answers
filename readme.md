@@ -11,23 +11,30 @@ Exercise 1
 ```sql
 SELECT * FROM cd.facilities;
 ```
-2. You want to print out a list of all of the facilities and their cost to members. How would you retrieve a list of only facility names and costs?
+	
+2. You want to print out a list of all of the facilities and their cost to members.\
+How would you retrieve a list of only facility names and costs?
 ```sql
 SELECT name, membercost FROM cd.facilities;
 ```
+	
 3. How can you produce a list of facilities that charge a fee to members?
 ```sql
 SELECT * FROM cd.facilities WHERE membercost != 0 ;
 ```
-4. How can you produce a list of facilities that charge a fee to members, and that fee is less than 1/50th of the monthly maintenance cost? Return the facid, facility name, member cost, and monthly maintenance of the facilities in question.
+	
+4. How can you produce a list of facilities that charge a fee to members, and that fee is less than 1/50th of the monthly maintenance cost? \
+Return the facid, facility name, member cost, and monthly maintenance of the facilities in question.
 ```sql
 SELECT facid,name,membercost,monthlymaintenance FROM cd.facilities 
 WHERE membercost != 0 AND membercost <= monthlymaintenance /50.0;
 ```
+							 
 5. How can you produce a list of all facilities with the word 'Tennis' in their name?
 ```sql
 SELECT * FROM cd.facilities WHERE name LIKE  '%Tennis%';
 ```
+							 
 6. How can you retrieve the details of facilities with ID 1 and 5? Try to do it without using the OR operator.
 ```sql
 SELECT * FROM cd.facilities 
@@ -38,7 +45,8 @@ OR
 SELECT * FROM cd.facilities 
   WHERE facid IN (1,5);                                                                                                                  
 ```
-7. How can you produce a list of facilities, with each labelled as 'cheap' or 'expensive' depending on if their monthly maintenance cost is more than $100? 
+							 
+7. How can you produce a list of facilities, with each labelled as 'cheap' or 'expensive' depending on if their monthly maintenance cost is more than $100? \
    Return the name and monthly maintenance of the facilities in question.
 ```sql
 SELECT name, 
@@ -47,23 +55,29 @@ SELECT name,
 FROM cd.facilities;               
 ```
 
-8. How can you produce a list of members who joined after the start of September 2012? 
+8. How can you produce a list of members who joined after the start of September 2012? \
    Return the memid, surname, firstname, and joindate of the members in question.
 ```sql
 SELECT memid, surname, firstname, joindate FROM cd.members
 WHERE joindate >= '2012-09-01';  
-```                                                         
-9. How can you produce an ordered list of the first 10 surnames in the members table? The list must not contain duplicates.
+```
+	
+9. How can you produce an ordered list of the first 10 surnames in the members table? \
+The list must not contain duplicates.
 ```sql                                                         
 SELECT DISTINCT surname FROM cd.members 
 ORDER BY surname
 LIMIT 10;
-```                                                         
-10. You, for some reason, want a combined list of all surnames and all facility names. Yes, this is a contrived example :-). Produce that list!                                   ```sql
+```  
+	
+10. You, for some reason, want a combined list of all surnames and all facility names. Yes, this is a contrived example :-).\ 
+Produce that list!                                   
+```sql
 SELECT surname FROM cd.members 
 UNION 
 SELECT name FROM cd.facilities;
-```                      
+``` 
+	
 11. You'd like to get the signup date of your last member. How can you retrieve this information?
 ```sql
 SELECT joindate AS latest FROM cd.members 
@@ -109,7 +123,7 @@ INNER JOIN cd.members mems ON
 mems.memid = bks.memid
 WHERE mems.firstname = 'David' AND mems.surname = 'Farrell';
 ```
-2. How can you produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? 
+2. How can you produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? \
 Return a list of start time and facility name pairings, ordered by the time.
 ```sql
 SELECT bks.starttime As start, fcts.name AS name 
@@ -133,7 +147,7 @@ WHERE fcts.facid in (0,1) and
 	  bks.starttime < '2012-09-22'
 ORDER BY bks.starttime;   
 ```						       
-3. How can you output a list of all members who have recommended another member? 
+3. How can you output a list of all members who have recommended another member? \
 Ensure that there are no duplicates in the list, and that results are ordered by (surname, firstname).
 ```sql
 SELECT DISTINCT rec.firstname AS firstname, rec.surname AS surname 
@@ -151,7 +165,7 @@ LEFT OUTER JOIN cd.members rec ON
 rec.memid = mems.recommendedby
 ORDER BY memsname, memfname;
 ```
-5. How can you produce a list of all members who have used a tennis court? 
+5. How can you produce a list of all members who have used a tennis court? \
 Include in your output the name of the court, and the name of the member formatted as a single column. Ensure no duplicate data, and order by the member name followed by the facility name. 
 ```sql
 SELECT DISTINCT mems.firstname || ' ' || mems.surname AS member, fct.name AS facility 
@@ -163,9 +177,10 @@ bks.facid = fct.facid
 WHERE fct.name IN ('Tennis Court 1','Tennis Court 2')
 ORDER BY member, facility;
 ```
-6. How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? 
-Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. 
-Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost, and do not use any subqueries.
+6. How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? \
+Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. \
+Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. \
+Order by descending cost, and do not use any subqueries.
 ```sql
 SELECT mems.firstname || ' ' || mems.surname AS member, fct.name AS facility,
 
@@ -193,7 +208,7 @@ WHERE bks.starttime >= '2012-09-14' AND bks.starttime < '2012-09-15' AND
 	
 ORDER BY cost DESC;			       
 ```
-7. How can you output a list of all members, including the individual who recommended them (if any), without using any joins? 
+7. How can you output a list of all members, including the individual who recommended them (if any), without using any joins? \
 Ensure that there are no duplicates in the list, and that each firstname + surname pairing is formatted as a column and ordered.
 ```sql
 SELECT DISTINCT mems.firstname || ' ' ||  mems.surname as member,
@@ -209,10 +224,11 @@ SELECT DISTINCT mems.firstname || ' ' ||  mems.surname as member,
 ORDER BY member; 
 	
 ```
-8. The Produce a list of costly bookings exercise contained some messy logic: we had to calculate the booking cost in both the WHERE clause and the CASE statement. 
+8. The Produce a list of costly bookings exercise contained some messy logic: we had to calculate the booking cost in both the WHERE clause and the CASE statement. \
 Try to simplify this calculation using subqueries. For reference, the question was:
-How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30?
-Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. 
+	
+How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30?\
+Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. \
 Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost.
 ```sql
 SELECT member, facility, cost FROM (
@@ -240,6 +256,3 @@ ORDER BY cost desc;
 
 	
 ```
-
-  
-
