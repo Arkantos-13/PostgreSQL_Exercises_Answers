@@ -39,7 +39,6 @@ SELECT * FROM cd.facilities
   WHERE facid IN (1,5);                                                                                                                  
 ```
 7. How can you produce a list of facilities, with each labelled as 'cheap' or 'expensive' depending on if their monthly maintenance cost is more than $100? 
-   
    Return the name and monthly maintenance of the facilities in question.
 ```sql
 SELECT name, 
@@ -71,7 +70,9 @@ SELECT joindate AS latest FROM cd.members
 ORDER BY joindate DESC
 LIMIT 1 ;
 ```
+	
 OR 
+	
 ```sql
 SELECT MAX(joindate) AS latest FROM cd.members;
 ```  
@@ -99,7 +100,9 @@ INNER JOIN cd.members ON
 cd.members.memid = cd.bookings.memid 
 WHERE firstname = 'David' AND surname = 'Farrell';
 ```
+	
 OR 
+	
 ```sql
 SELECT bks.starttime FROM cd.bookings bks
 INNER JOIN cd.members mems ON
@@ -107,7 +110,7 @@ mems.memid = bks.memid
 WHERE mems.firstname = 'David' AND mems.surname = 'Farrell';
 ```
 2. How can you produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? 
-	Return a list of start time and facility name pairings, ordered by the time.
+Return a list of start time and facility name pairings, ordered by the time.
 ```sql
 SELECT bks.starttime As start, fcts.name AS name 
 FROM cd.facilities fcts
@@ -117,7 +120,9 @@ WHERE fcts.name IN ('Tennis Court 1','Tennis Court 2') AND
 bks.starttime >= '2012-09-21' AND bks.starttime < '2012-09-22'
 ORDER BY bks.starttime;
 ```
+						       
 OR
+						       
 ```sql
 SELECT bks.starttime as start, fcts.name as name
 FROM cd.facilities fcts
@@ -135,7 +140,8 @@ SELECT DISTINCT rec.firstname AS firstname, rec.surname AS surname
 FROM cd.members mems 
 INNER JOIN cd.members rec ON
 rec.memid = mems.recommendedby
-ORDER BY surname ,firstname;```	       
+ORDER BY surname ,firstname;
+```	       
 4. How can you output a list of all members, including the individual who recommended them (if any)? Ensure that results are ordered by (surname, firstname).
 ```sql
 SELECT mems.firstname AS memfname, mems.surname AS memsname, 
