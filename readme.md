@@ -138,19 +138,60 @@ rec.memid = mems.recommendedby
 ORDER BY surname ,firstname;```	       
 4. How can you output a list of all members, including the individual who recommended them (if any)? Ensure that results are ordered by (surname, firstname).
 ```sql
-SELECT Title, Year FROM movies LIMIT 5;
+SELECT mems.firstname AS memfname, mems.surname AS memsname, 
+rec.firstname AS recfname, rec.surname AS recsname
+FROM cd.members mems
+LEFT OUTER JOIN cd.members rec ON 
+rec.memid = mems.recommendedby
+ORDER BY memsname, memfname;
 ```
-5. 
+5. How can you produce a list of all members who have used a tennis court? 
+Include in your output the name of the court, and the name of the member formatted as a single column. Ensure no duplicate data, and order by the member name followed by the facility name. 
 ```sql
-SELECT Title, Year FROM movies LIMIT 5;
+SELECT DISTINCT mems.firstname || ' ' || mems.surname AS member, fct.name AS facility 
+FROM cd.members mems 
+INNER JOIN cd.bookings bks ON 
+mems.memid = bks.memid 
+INNER JOIN cd.facilities fct ON 
+bks.facid = fct.facid
+WHERE fct.name IN ('Tennis Court 1','Tennis Court 2')
+ORDER BY member, facility;
 ```
-6. 
+6. How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? 
+Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. 
+Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost, and do not use any subqueries.
 ```sql
-SELECT Title, Year FROM movies LIMIT 5;
+SELECT mems.firstname || ' ' || mems.surname AS member, fct.name AS facility,
+
+CASE 
+	
+	WHEN mems.memid = 0 THEN 
+		bks.slots * fct.guestcost
+	ELSE 
+		bks.slots * fct.membercost
+END AS cost
+	
+FROM cd.members mems 
+	
+	INNER JOIN cd.bookings bks ON
+	mems.memid = bks.memid
+	
+	INNER JOIN cd.facilities fct ON 
+	bks.facid = fct.facid
+	
+WHERE bks.starttime >= '2012-09-14' AND bks.starttime < '2012-09-15' AND 
+	(
+	(mems.memid = 0 AND bks.slots * fct.guestcost > 30 ) OR 
+	(mems.memid != 0 AND bks.slots * fct.membercost > 30 ) 
+	)
+	
+ORDER BY cost DESC;			       
 ```
-7. 
+7. How can you output a list of all members, including the individual who recommended them (if any), without using any joins? 
+Ensure that there are no duplicates in the list, and that each firstname + surname pairing is formatted as a column and ordered. 
 ```sql
-SELECT Title, Year FROM movies LIMIT 5;
+
+	
 ```
 8. 
 ```sql
