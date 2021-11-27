@@ -99,31 +99,60 @@ INNER JOIN cd.members ON
 cd.members.memid = cd.bookings.memid 
 WHERE firstname = 'David' AND surname = 'Farrell';
 ```
-2. Find the movies released in the years between 2000 and 2010
+OR 
 ```sql
-SELECT * FROM movies WHERE Year BETWEEN 2000 AND 2010;
+SELECT bks.starttime FROM cd.bookings bks
+INNER JOIN cd.members mems ON
+mems.memid = bks.memid
+WHERE mems.firstname = 'David' AND mems.surname = 'Farrell';
 ```
-3. Find the movies not released in the years between 2000 and 2010
+2. How can you produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? 
+	Return a list of start time and facility name pairings, ordered by the time.
 ```sql
-SELECT * FROM movies WHERE Year NOT BETWEEN 2000 AND 2010;
+SELECT bks.starttime As start, fcts.name AS name 
+FROM cd.facilities fcts
+INNER JOIN cd.bookings bks ON 
+fcts.facid = bks.facid
+WHERE fcts.name IN ('Tennis Court 1','Tennis Court 2') AND
+bks.starttime >= '2012-09-21' AND bks.starttime < '2012-09-22'
+ORDER BY bks.starttime;
 ```
-4. Find the first 5 Pixar movies and their release year
+OR
+```sql
+SELECT bks.starttime as start, fcts.name as name
+FROM cd.facilities fcts
+INNER JOIN cd.bookings bks ON 
+fcts.facid = bks.facid
+WHERE fcts.facid in (0,1) and
+	  bks.starttime >= '2012-09-21' AND
+	  bks.starttime < '2012-09-22'
+ORDER BY bks.starttime;   
+```						       
+3. How can you output a list of all members who have recommended another member? 
+Ensure that there are no duplicates in the list, and that results are ordered by (surname, firstname).
+```sql
+SELECT DISTINCT rec.firstname AS firstname, rec.surname AS surname 
+FROM cd.members mems 
+INNER JOIN cd.members rec ON
+rec.memid = mems.recommendedby
+ORDER BY surname ,firstname;```	       
+4. How can you output a list of all members, including the individual who recommended them (if any)? Ensure that results are ordered by (surname, firstname).
 ```sql
 SELECT Title, Year FROM movies LIMIT 5;
 ```
-5. Find the first 5 Pixar movies and their release year
+5. 
 ```sql
 SELECT Title, Year FROM movies LIMIT 5;
 ```
-6. Find the first 5 Pixar movies and their release year
+6. 
 ```sql
 SELECT Title, Year FROM movies LIMIT 5;
 ```
-7. Find the first 5 Pixar movies and their release year
+7. 
 ```sql
 SELECT Title, Year FROM movies LIMIT 5;
 ```
-8. Find the first 5 Pixar movies and their release year
+8. 
 ```sql
 SELECT Title, Year FROM movies LIMIT 5;
 ```
