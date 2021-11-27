@@ -70,7 +70,8 @@ ORDER BY surname
 LIMIT 10;
 ```  
 	
-10. You, for some reason, want a combined list of all surnames and all facility names. Yes, this is a contrived example :-).\ 
+10. You, for some reason, want a combined list of all surnames and all facility names. \
+Yes, this is a contrived example :-).
 Produce that list!                                   
 ```sql
 SELECT surname FROM cd.members 
