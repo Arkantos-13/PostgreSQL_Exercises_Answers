@@ -2,7 +2,15 @@
 
 Click [Here](https://pgexercises.com/), If you want to improve your PostgreSQL skills and acquire more experience with difficult queries  <hr>
 
-
+:heavy_check_mark: Simple SQL Queries\
+:heavy_check_mark: Joins and Subqueries\
+:heavy_check_mark: Modifying data\
+:heavy_check_mark: Aggregation \
+:heavy_check_mark: Working with Timestamps \
+:heavy_check_mark: String Operations \
+:heavy_check_mark: Recursive Queries 
+	
+	
 # Simple SQL Queries
 
 Exercise 1 
