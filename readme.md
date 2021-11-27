@@ -2,6 +2,8 @@
 
 Click [Here](https://pgexercises.com/), If you want to improve your PostgreSQL skills and acquire more experience with difficult queries  <hr>
 
+We'll look at the following chapters
+
 :heavy_check_mark: Simple SQL Queries\
 :heavy_check_mark: Joins and Subqueries\
 :heavy_check_mark: Modifying data\
@@ -13,7 +15,7 @@ Click [Here](https://pgexercises.com/), If you want to improve your PostgreSQL s
 	
 # Simple SQL Queries
 
-Exercise 1 
+Chapter 1 
 
 1. How can you retrieve all the information from the cd.facilities table?
 ```sql
@@ -115,7 +117,7 @@ WHERE joindate = ( SELECT MAX(joindate) FROM cd.members);
 	
 # Joins and Subqueries
 
-Exercise 2 
+Chapter 2 
 
 1. How can you produce a list of the start times for bookings by members named 'David Farrell'?
 ```sql
@@ -269,7 +271,7 @@ ORDER BY cost desc;
 
 # Modifying data 
 
-Exercise 3
+Chapter 3
 	
 1. The club is adding a new facility - a spa. We need to add it into the facilities table. \
 Use the following values:\
@@ -361,3 +363,9 @@ How can we make that more general, to delete all members who have never made a b
 DELETE FROM cd.members 
 WHERE memid NOT IN (SELECT memid FROM cd.bookings);
 ```
+
+<br>
+	
+Chapter 4 
+	
+1. 
