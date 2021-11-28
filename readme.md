@@ -505,7 +505,8 @@ ORDER BY facid, month;
 13.Produce a list of the total number of hours booked per facility, remembering that a slot lasts half an hour.\
 The output table should consist of the facility id, name, and hours booked, sorted by facility id. \
 Try formatting the hours to two decimal places.		
-One of the taughest question so far						
+
+```One of the taughest question so far```						
 ```sql
 SELECT fct.facid, fct.name, trim(to_char(sum(bks.slots)/2.0, '9999999999999999D99')) as "Total Hours"  FROM cd.bookings bks
 INNER JOIN cd.facilities fct ON 
@@ -513,7 +514,89 @@ fct.facid = bks.facid
 GROUP BY fct.facid, fct.name
 ORDER BY fct.facid;
 ```
-14.	
+14.Produce a list of each member name, id, and their first booking after September 1st 2012. Order by member ID.	
 ```sql
+SELECT mems.surname, mems.firstname,mems.memid, MIN(starttime) FROM cd.members mems
+INNER JOIN cd.bookings bks ON 
+mems.memid = bks.memid 
+WHERE starttime > '2012-09-01'
+GROUP BY mems.surname, mems.firstname,mems.memid
+ORDER BY memid;
+```
 
+15. Produce a list of member names, with each row containing the total member count. Order by join date, and include guest members.
+```sql
+SELECT (SELECT COUNT(*) FROM cd.members), firstname, surname FROM cd.members mems
+GROUP BY mems.firstname, mems.surname, mems.joindate
+ORDER BY joindate;
+```
+	
+16.Produce a monotonically increasing numbered list of members (including guests), ordered by their date of joining.\
+Remember that member IDs are not guaranteed to be sequential.
+```sql
+SELECT row_number() OVER (ORDER BY joindate), firstname, surname
+FROM cd.members ORDER BY joindate;	
+```
+OR
+```sql
+SELECT COUNT(*) OVER (ORDER BY joindate) AS row_number, firstname, surname FROM cd.members;
+```
+	
+17.Output the facility id that has the highest number of slots booked.\
+Ensure that in the event of a tie, all tieing results get output.	
+```sql
+SELECT facid, total FROM (
+  
+  SELECT facid, SUM(slots) AS total,
+         rank() OVER (ORDER BY SUM(slots) DESC) AS rank
+  
+  FROM cd.bookings
+  GROUP BY facid
+) AS ranked WHERE rank = 1	
+```
+
+18. Produce a list of members (including guests), along with the number of hours they've booked in facilities, rounded to the nearest ten hours.\
+Rank them by this rounded figure, producing output of first name, surname, rounded hours, rank.\
+Sort by rank, surname, and first name.	
+```sql
+SELECT firstname, surname, hours, rank () OVER (ORDER BY hours DESC) FROM 
+
+(SELECT firstname, surname,
+		( ( SUM(bks.slots) + 10 ) / 20 ) * 10 AS hours
+
+		FROM cd.bookings bks
+		
+ 			INNER JOIN cd.members mems
+			ON bks.memid = mems.memid
+		GROUP BY mems.memid
+	) AS subq
+ORDER BY rank, surname, firstname;	
+```
+
+19.Produce a list of the top three revenue generating facilities (including ties).\
+Output facility name and rank, sorted by rank and facility name.	
+```sql
+SELECT name, rank FROM (
+  
+  SELECT fct.name AS name, RANK () OVER (ORDER BY SUM( CASE 
+		
+		WHEN memid = 0 THEN slots * fct.guestcost
+  		ELSE slots * fct.membercost 
+		END ) 
+		DESC ) AS rank 
+
+FROM cd.bookings bks 
+
+INNER JOIN cd.facilities fct ON 
+bks.facid = fct.facid 
+
+GROUP BY fct.name) AS subq
+WHERE rank <= 3
+ORDER BY rank;					
+```
+
+20.Classify facilities into equally sized groups of high, average, and low based on their revenue.\
+Order by classification and facility name.	
+```sql
+	
 ```
