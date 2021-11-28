@@ -13,9 +13,8 @@ We'll look at the following chapters
 :heavy_check_mark: Recursive Queries 
 	
 	
-# Simple SQL Queries
-
-Chapter 1 
+# Chapter 1:   Simple SQL Queries
+ 
 
 1. How can you retrieve all the information from the cd.facilities table?
 ```sql
@@ -50,10 +49,10 @@ SELECT * FROM cd.facilities WHERE name LIKE  '%Tennis%';
 SELECT * FROM cd.facilities 
 WHERE name IN ('Tennis Court 2', 'Massage Room 2');
 ```
-OR 
-```sql
-SELECT * FROM cd.facilities 
-  WHERE facid IN (1,5);                                                                                                                  
+							 
+OR
+```sql							 
+SELECT * FROM cd.facilities WHERE facid IN (1,5);
 ```
 							 
 7. How can you produce a list of facilities, with each labelled as 'cheap' or 'expensive' depending on if their monthly maintenance cost is more than $100? \
@@ -135,6 +134,7 @@ INNER JOIN cd.members mems ON
 mems.memid = bks.memid
 WHERE mems.firstname = 'David' AND mems.surname = 'Farrell';
 ```
+	
 2. How can you produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? \
 Return a list of start time and facility name pairings, ordered by the time.
 ```sql
@@ -158,7 +158,8 @@ WHERE fcts.facid in (0,1) and
 	  bks.starttime >= '2012-09-21' AND
 	  bks.starttime < '2012-09-22'
 ORDER BY bks.starttime;   
-```						       
+```
+			       
 3. How can you output a list of all members who have recommended another member? \
 Ensure that there are no duplicates in the list, and that results are ordered by (surname, firstname).
 ```sql
@@ -167,8 +168,10 @@ FROM cd.members mems
 INNER JOIN cd.members rec ON
 rec.memid = mems.recommendedby
 ORDER BY surname ,firstname;
-```	       
-4. How can you output a list of all members, including the individual who recommended them (if any)? Ensure that results are ordered by (surname, firstname).
+```
+			       
+4. How can you output a list of all members, including the individual who recommended them (if any)? \
+Ensure that results are ordered by (surname, firstname).
 ```sql
 SELECT mems.firstname AS memfname, mems.surname AS memsname, 
 rec.firstname AS recfname, rec.surname AS recsname
@@ -177,8 +180,10 @@ LEFT OUTER JOIN cd.members rec ON
 rec.memid = mems.recommendedby
 ORDER BY memsname, memfname;
 ```
+			       
 5. How can you produce a list of all members who have used a tennis court? \
-Include in your output the name of the court, and the name of the member formatted as a single column. Ensure no duplicate data, and order by the member name followed by the facility name. 
+Include in your output the name of the court, and the name of the member formatted as a single column.\
+Ensure no duplicate data, and order by the member name followed by the facility name. 
 ```sql
 SELECT DISTINCT mems.firstname || ' ' || mems.surname AS member, fct.name AS facility 
 FROM cd.members mems 
@@ -189,6 +194,7 @@ bks.facid = fct.facid
 WHERE fct.name IN ('Tennis Court 1','Tennis Court 2')
 ORDER BY member, facility;
 ```
+			       
 6. How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? \
 Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. \
 Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. \
@@ -225,7 +231,8 @@ Ensure that there are no duplicates in the list, and that each firstname + surna
 ```sql
 SELECT DISTINCT mems.firstname || ' ' ||  mems.surname as member,
 	
-	(SELECT recs.firstname || ' ' || recs.surname as recommender 
+	(
+	SELECT recs.firstname || ' ' || recs.surname as recommender 
 		
 	 FROM cd.members recs 
 		WHERE recs.memid = mems.recommendedby
@@ -237,8 +244,7 @@ ORDER BY member;
 	
 ```
 8. The Produce a list of costly bookings exercise contained some messy logic: we had to calculate the booking cost in both the WHERE clause and the CASE statement. \
-Try to simplify this calculation using subqueries. For reference, the question was:
-	
+Try to simplify this calculation using subqueries. For reference, the question was:\
 How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30?\
 Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. \
 Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost.
@@ -275,13 +281,14 @@ Chapter 3
 	
 1. The club is adding a new facility - a spa. We need to add it into the facilities table. \
 Use the following values:\
-facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800.
+```facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800```
 ```sql
 INSERT INTO cd.facilities
 (facid, name, membercost, guestcost, initialoutlay, monthlymaintenance)
 VALUES
 (9, 'Spa', 20, 30, 100000, 800);
 ```
+	
 OR 
 	
 ```sql
@@ -290,8 +297,9 @@ INSERT INTO cd.facilities VALUES (9, 'Spa', 20, 30, 100000, 800);
 	
 2. In the previous exercise, you learned how to add a facility. Now you're going to add multiple facilities in one command. Use the following values:
 
-```facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800.```\
-```facid: 10, Name: 'Squash Court 2', membercost: 3.5, guestcost: 17.5, initialoutlay: 5000, monthlymaintenance: 80.```
+```facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800```\
+```facid: 10, Name: 'Squash Court 2', membercost: 3.5, guestcost: 17.5, initialoutlay: 5000, monthlymaintenance: 80```
+	
 ```sql
 INSERT INTO cd.facilities 
 (facid, Name, membercost, guestcost, initialoutlay, monthlymaintenance)
@@ -304,7 +312,8 @@ VALUES
 This time, though, we want to automatically generate the value for the next facid, rather than specifying it as a constant.\ 
 Use the following values for everything else: \
 
-```Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800.```	
+```Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800```
+	
 ```sql
 INSERT INTO cd.facilities 
 (facid, name, membercost, guestcost, initialoutlay, monthlymaintenance)
