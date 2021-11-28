@@ -12,6 +12,7 @@ We'll look at the following chapters
 :heavy_check_mark: String Operations \
 :heavy_check_mark: Recursive Queries 
 	
+<br>
 	
 # Chapter 1:   Simple SQL Queries
  
@@ -114,10 +115,9 @@ WHERE joindate = ( SELECT MAX(joindate) FROM cd.members);
   
 <br>
 	
-# Joins and Subqueries
+# Chapter 2: Joins and Subqueries
 
-Chapter 2 
-
+	
 1. How can you produce a list of the start times for bookings by members named 'David Farrell'?
 ```sql
 SELECT starttime FROM cd.bookings
@@ -154,7 +154,7 @@ SELECT bks.starttime as start, fcts.name as name
 FROM cd.facilities fcts
 INNER JOIN cd.bookings bks ON 
 fcts.facid = bks.facid
-WHERE fcts.facid in (0,1) and
+WHERE fcts.facid in (0,1) AND
 	  bks.starttime >= '2012-09-21' AND
 	  bks.starttime < '2012-09-22'
 ORDER BY bks.starttime;   
