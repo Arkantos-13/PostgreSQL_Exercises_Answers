@@ -275,9 +275,8 @@ ORDER BY cost desc;
 
 <br>
 
-# Modifying data 
+# Chapter 3: Modifying data 
 
-Chapter 3
 	
 1. The club is adding a new facility - a spa. We need to add it into the facilities table. \
 Use the following values:\
@@ -441,7 +440,9 @@ ORDER BY facid;
 ```
 	
 ```
-The behaviour of HAVING is easily confused with that of WHERE. The best way to think about it is that in the context of a query with an aggregate function, WHERE is used to filter what data gets input into the aggregate function, while HAVING is used to filter the data once it is output from the function.	
+The behaviour of HAVING is easily confused with that of WHERE.\
+The best way to think about it is that in the context of a query with an aggregate function, WHERE is used to filter what data gets input into the aggregate function,\
+while HAVING is used to filter the data once it is output from the function.	
 ```
 	
 9.Produce a list of facilities along with their total revenue. \ 
