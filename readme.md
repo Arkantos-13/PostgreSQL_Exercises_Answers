@@ -374,7 +374,7 @@ WHERE memid NOT IN (SELECT memid FROM cd.bookings);
 
 <br>
 	
-# Chapter 4 Aggregation
+# Chapter 4: Aggregation
 	
 1. For our first foray into aggregates, we're going to stick to something simple. \
 We want to know how many facilities exist - simply produce a total count.
