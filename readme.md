@@ -598,5 +598,19 @@ ORDER BY rank;
 20.Classify facilities into equally sized groups of high, average, and low based on their revenue.\
 Order by classification and facility name.	
 ```sql
-	
+SELECT name, 
+CASE class WHEN 1 THEN 'high' 
+		   WHEN 2 THEN 'average'
+		   ELSE 'low' END
+FROM ( SELECT fct.name, ntile(3) OVER ( ORDER BY SUM(
+  CASE WHEN memid = 0 THEN slots * fct.guestcost 
+  	   ELSE slots * membercost END ) DESC ) AS class
+
+FROM cd.bookings bks 
+	INNER JOIN cd.facilities fct ON
+	 bks.facid = fct.facid
+	 GROUP BY fct.name
+	 ) AS subq
+	 
+ORDER BY class, name;	
 ```
