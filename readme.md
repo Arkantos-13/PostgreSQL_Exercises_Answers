@@ -13,7 +13,9 @@ We'll look at the following chapters
 :heavy_check_mark: Recursive Queries 
 	
 <br>
+
 	
+![](https://pgexercises.com/img/schema-horizontal.svg)
 # Chapter 1:   Simple SQL Queries
  
 
