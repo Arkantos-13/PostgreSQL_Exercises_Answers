@@ -375,6 +375,133 @@ WHERE memid NOT IN (SELECT memid FROM cd.bookings);
 
 <br>
 	
-Chapter 4 
+# Chapter 4 Aggregation
 	
-1. 
+1. For our first foray into aggregates, we're going to stick to something simple. \
+We want to know how many facilities exist - simply produce a total count.
+```sql
+SELECT COUNT(*) AS count FROM cd.facilities;
+```
+	
+2. Produce a count of the number of facilities that have a cost to guests of 10 or more.	
+```sql
+SELECT COUNT(*) FROM cd.facilities WHERE guestcost >= 10;
+```
+	
+3. Produce a count of the number of recommendations each member has made. Order by member ID.	
+```sql
+SELECT recommendedby, COUNT(*) FROM cd.members
+WHERE recommendedby IS NOT NULL
+GROUP BY recommendedby
+ORDER BY recommendedby;
+```
+	
+4. Produce a list of the total number of slots booked per facility. \
+For now, just produce an output table consisting of facility id and slots, sorted by facility id.	
+```sql
+SELECT facid, SUM(slots) AS "Total Slots" FROM cd.bookings
+GROUP BY facid
+ORDER BY facid;
+```
+	
+5. Produce a list of the total number of slots booked per facility in the month of September 2012.\
+Produce an output table consisting of facility id and slots, sorted by the number of slots.	
+```sql
+SELECT facid, SUM(slots) AS "Total Slots" FROM cd.bookings
+WHERE starttime >= '2012-09-01' AND  starttime < '2012-10-1'
+GROUP BY facid
+ORDER BY SUM(slots);
+```
+6. Produce a list of the total number of slots booked per facility per month in the year of 2012. \ 
+Produce an output table consisting of facility id and slots, sorted by the id and month.	
+```sql
+SELECT facid, EXTRACT (month from starttime) AS month, SUM(slots) AS "Total Slots" FROM cd.bookings
+WHERE EXTRACT (year from starttime ) = 2012
+GROUP BY facid, month
+ORDER BY facid, month;
+```
+```						      
+EXTRACT allows you to get individual components of a timestamp, like day, month, year, etc.\ 
+We group by the output of this function to provide per-month values.		
+```
+						      
+7. Find the total number of members (including guests) who have made at least one booking.	
+```sql
+SELECT COUNT (DISTINCT memid) FROM cd.bookings
+WHERE slots >= 1;
+```
+
+8. Produce a list of facilities with more than 1000 slots booked. \
+Produce an output table consisting of facility id and slots, sorted by facility id.
+```sql
+SELECT facid, SUM(slots) AS "Total Slots" FROM cd.bookings
+GROUP BY facid
+HAVING SUM(slots) > 1000
+ORDER BY facid;
+```
+	
+```
+The behaviour of HAVING is easily confused with that of WHERE. The best way to think about it is that in the context of a query with an aggregate function, WHERE is used to filter what data gets input into the aggregate function, while HAVING is used to filter the data once it is output from the function.	
+```
+	
+9.Produce a list of facilities along with their total revenue. \ 
+The output table should consist of facility name and revenue, sorted by revenue. \ 
+Remember that there's a different cost for guests and members!
+```sql
+SELECT fct.name, SUM ( slots * CASE 
+			WHEN memid = 0 THEN fct.guestcost
+			ELSE fct.membercost 
+			END) AS revenue 
+		
+		FROM cd.bookings bks
+		INNER JOIN cd.facilities fct ON 
+		bks.facid = fct.facid
+		
+		GROUP BY fct.name
+		ORDER BY revenue;
+```
+	
+10.Produce a list of facilities with a total revenue less than 1000.\
+Produce an output table consisting of facility name and revenue, sorted by revenue.\
+Remember that there's a different cost for guests and members!
+```sql
+SELECT fct.name , SUM( slots * CASE 
+			WHEN memid = 0 THEN fct.guestcost
+			ELSE fct.membercost 
+			END) AS revenue
+			
+			FROM cd.bookings bks 
+			INNER JOIN cd.facilities fct ON
+			bks.facid = fct.facid
+			GROUP BY fct.name
+			HAVING SUM( slots * CASE 
+			WHEN memid = 0 THEN fct.guestcost
+			ELSE fct.membercost 
+			END) < 1000
+			ORDER BY revenue;
+```
+	
+11. Output the facility id that has the highest number of slots booked.\
+For bonus points, try a version without a LIMIT clause. This version will probably look messy!	
+```sql
+SELECT facid, SUM(slots) AS "Total Slots" FROM cd.bookings
+GROUP BY facid
+ORDER BY SUM(slots) DESC
+LIMIT 1;
+```
+				   
+12.Produce a list of the total number of slots booked per facility per month in the year of 2012. \
+In this version, include output rows containing totals for all months per facility, and a total for all months for all facilities. \
+The output table should consist of facility id, month and slots, sorted by the id and month. \
+When calculating the aggregated values for all months and all facids, return null values in the month and facid columns.				   
+```sql
+
+```
+	
+```sql
+
+```
+	
+```sql
+
+```
