@@ -496,13 +496,24 @@ In this version, include output rows containing totals for all months per facili
 The output table should consist of facility id, month and slots, sorted by the id and month. \
 When calculating the aggregated values for all months and all facids, return null values in the month and facid columns.				   
 ```sql
-
+SELECT facid, EXTRACT (month FROM starttime) AS month, SUM(slots) AS "slots" FROM cd.bookings
+WHERE ( starttime >= '2012-01-01' AND starttime < '2013-01-01' )
+GROUP BY ROLLUP(facid, month)
+ORDER BY facid, month;
 ```
-	
+
+13.Produce a list of the total number of hours booked per facility, remembering that a slot lasts half an hour.\
+The output table should consist of the facility id, name, and hours booked, sorted by facility id. \
+Try formatting the hours to two decimal places.		
+One of the taughest question so far						
 ```sql
-
+SELECT fct.facid, fct.name, trim(to_char(sum(bks.slots)/2.0, '9999999999999999D99')) as "Total Hours"  FROM cd.bookings bks
+INNER JOIN cd.facilities fct ON 
+fct.facid = bks.facid
+GROUP BY fct.facid, fct.name
+ORDER BY fct.facid;
 ```
-	
+14.	
 ```sql
 
 ```
