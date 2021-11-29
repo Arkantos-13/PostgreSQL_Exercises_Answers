@@ -616,3 +616,49 @@ FROM cd.bookings bks
 	 
 ORDER BY class, name;	
 ```
+
+21. Based on the 3 complete months of data so far, calculate the amount of time each facility will take to repay its cost of ownership.\
+    Remember to take into account ongoing monthly maintenance. Output facility name and payback time in months, order by facility name. \
+    Don't worry about differences in month lengths, we're only looking for a rough value here!	
+```sql	   
+SELECT fct.name AS name, 
+	   fct.initialoutlay / (
+		 ( SUM (
+		   CASE 
+				WHEN memid = 0 THEN slots * guestcost
+				
+		        ELSE slots * membercost END ) / 3 
+		  ) 
+				- fct.monthlymaintenance ) AS months FROM cd.bookings bks 
+
+INNER JOIN cd.facilities fct ON 
+bks.facid = fct.facid
+GROUP BY fct.facid
+ORDER BY name;	     
+```
+	      
+22. For each day in August 2012, calculate a rolling average of total revenue over the previous 15 days.\
+	      Output should contain date and revenue columns, sorted by the date. Remember to account for the possibility of a day having zero revenue.
+    
+    ```This one's a bit tough, so don't be afraid to check out the hint!```
+	      
+```sql
+SELECT dategen.date, (
+  SELECT SUM ( CASE 
+			  WHEN memid = 0 THEN slots * guestcost
+			  ELSE slots * membercost END ) AS rev
+  
+  FROM cd.bookings bks
+  INNER JOIN cd.facilities fct ON
+  bks.facid = fct.facid
+  
+  WHERE bks.starttime > dategen.date - interval '14 days'
+  	AND bks.starttime < dategen.date + interval '1 day' ) / 15 AS revenue
+	
+  FROM 
+   ( SELECT CAST(GENERATE_SERIES(timestamp '2012-08-01','2012-08-31', '1 day') AS date ) 
+	AS date
+	
+	)  AS dategen
+ORDER BY dategen.date;          	      
+```
