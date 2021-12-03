@@ -511,7 +511,8 @@ Try formatting the hours to two decimal places.
 
 ```One of the taughest question so far```						
 ```sql
-SELECT fct.facid, fct.name, trim(to_char(sum(bks.slots)/2.0, '9999999999999999D99')) as "Total Hours"  FROM cd.bookings bks
+SELECT fct.facid, fct.name, trim(to_char(sum(bks.slots)/2.0, '9999999999999999D99')) 
+AS "Total Hours"  FROM cd.bookings bks
 INNER JOIN cd.facilities fct ON 
 fct.facid = bks.facid
 GROUP BY fct.facid, fct.name
